@@ -1,0 +1,12 @@
+/bin/
+/dist/
+*.test
+*.out
+coverage.txt
+
+# results from local runs, only results.md is committed
+/docs/raw/
+
+.DS_Store
+.vscode/
+.idea/

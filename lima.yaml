@@ -1,0 +1,40 @@
+# dev vm for iolens. macos has no ebpf/cgroups so everything runs in here
+#   limactl disk create data --size 20GiB
+#   limactl start --name=iolens ./lima.yaml
+vmType: vz
+arch: default
+cpus: 4
+memory: 8GiB
+disk: 40GiB
+
+images:
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-arm64.img"
+    arch: aarch64
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    arch: x86_64
+
+# second disk shows up as /dev/vdb, demo and benchmarks only touch this one
+additionalDisks:
+  - name: data
+    format: false
+
+mounts:
+  - location: "~/iolens"
+    writable: true
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update
+      apt-get install -y golang clang llvm libbpf-dev fio sysstat docker.io \
+        linux-tools-$(uname -r) linux-modules-extra-$(uname -r) make jq
+      usermod -aG docker {{.User}}
+      # kind + kubectl
+      ARCH=$(dpkg --print-architecture)
+      curl -fsSLo /usr/local/bin/kind https://kind.sigs.k8s.io/dl/v0.24.0/kind-linux-${ARCH}
+      chmod +x /usr/local/bin/kind
+      curl -fsSLo /usr/local/bin/kubectl https://dl.k8s.io/release/v1.31.1/bin/linux/${ARCH}/kubectl
+      chmod +x /usr/local/bin/kubectl
