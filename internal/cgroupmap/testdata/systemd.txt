@@ -1,0 +1,12 @@
+init.scope
+system.slice
+system.slice/containerd.service
+system.slice/postgresql.service
+kubepods.slice
+kubepods.slice/kubepods-burstable.slice
+kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod8a1e7c2d_51b2_4c4e_9f0a_3b7d2e1f6a90.slice
+kubepods.slice/kubepods-burstable.slice/kubepods-burstable-pod8a1e7c2d_51b2_4c4e_9f0a_3b7d2e1f6a90.slice/cri-containerd-4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a.scope
+kubepods.slice/kubepods-besteffort.slice
+kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod11223344_5566_7788_99aa_bbccddeeff00.slice
+kubepods.slice/kubepods-besteffort.slice/kubepods-besteffort-pod11223344_5566_7788_99aa_bbccddeeff00.slice/cri-containerd-9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d.scope
+kubepods.slice/kubepods-pod0f0e0d0c_0b0a_0908_0706_050403020100.slice

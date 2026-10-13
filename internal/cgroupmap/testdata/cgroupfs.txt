@@ -1,0 +1,10 @@
+system.slice
+system.slice/sshd.service
+kubepods
+kubepods/burstable
+kubepods/burstable/pod8a1e7c2d-51b2-4c4e-9f0a-3b7d2e1f6a90
+kubepods/burstable/pod8a1e7c2d-51b2-4c4e-9f0a-3b7d2e1f6a90/4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a4f1c2b3a
+kubepods/besteffort
+kubepods/besteffort/pod11223344-5566-7788-99aa-bbccddeeff00
+kubepods/besteffort/pod11223344-5566-7788-99aa-bbccddeeff00/9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d9b8a7c6d
+kubepods/pod0f0e0d0c-0b0a-0908-0706-050403020100
