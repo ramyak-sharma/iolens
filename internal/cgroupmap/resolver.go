@@ -125,3 +125,15 @@ func (r *Resolver) Gone(ids []uint64, grace time.Duration) []uint64 {
 	}
 	return out
 }
+
+// All returns every known id -> path, as of the last scan
+func (r *Resolver) All() map[uint64]string {
+	r.Rescan(false)
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	out := make(map[uint64]string, len(r.byID))
+	for k, v := range r.byID {
+		out[k] = v
+	}
+	return out
+}
