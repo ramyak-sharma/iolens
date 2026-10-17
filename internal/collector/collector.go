@@ -176,6 +176,11 @@ func (c *Collector) Collect() (*Snapshot, error) {
 	}
 	c.collectCgroups(s, cgids)
 
+	s.DevNames = make(map[uint32]string, len(c.devNames))
+	for k, v := range c.devNames {
+		s.DevNames[k] = v
+	}
+
 	if c.cfg.Findings != nil {
 		s.Findings, s.Warming = c.cfg.Findings()
 	}
@@ -295,6 +300,9 @@ func (c *Collector) collectCgroups(s *Snapshot, ids map[uint64]bool) {
 			if c.cfg.Source == nil {
 				continue
 			}
+		}
+		for _, l := range st {
+			c.devName(l.Major<<20 | l.Minor)
 		}
 		cg := &CgroupIO{ID: id, Labels: c.label(id), IOStat: st}
 		if p, err := psi.ReadFile(filepath.Join(dir, "io.pressure")); err == nil {

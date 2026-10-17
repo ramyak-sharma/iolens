@@ -5,6 +5,7 @@
 package collector
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ramyak-sharma/iolens/internal/cgroupmap"
@@ -103,7 +104,18 @@ type Snapshot struct {
 	Findings []Finding
 	Warming  bool // rules still building baselines
 
+	// dev_t (major<<20 | minor) -> name, for everything seen this tick
+	DevNames map[uint32]string
+
 	Agent AgentStats
+}
+
+// DevName returns the name for major:minor, or "maj:min" if unknown
+func (s *Snapshot) DevName(major, minor uint32) string {
+	if n, ok := s.DevNames[major<<20|minor]; ok {
+		return n
+	}
+	return fmt.Sprintf("%d:%d", major, minor)
 }
 
 // DeviceRates finds a device by name
