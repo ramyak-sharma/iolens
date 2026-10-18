@@ -94,14 +94,25 @@ func ReadFile(path string) ([]Stat, error) {
 // Rates are the derived per second values for one device over one interval.
 // names follow iostat -x so they can be compared column by column
 type Rates struct {
-	Name         string
-	Major, Minor uint32
+	Name  string `json:"device"`
+	Major uint32 `json:"major"`
+	Minor uint32 `json:"minor"`
 
-	RPS, WPS, DPS, FPS float64 // completed ios per second
-	RKBps, WKBps       float64
-	RAwaitMs, WAwaitMs float64 // average, includes queue time
-	Util               float64 // 0..1, share of time with something in flight
-	AquSz              float64 // avg requests in flight
+	// completed ios per second
+	RPS float64 `json:"r_s"`
+	WPS float64 `json:"w_s"`
+	DPS float64 `json:"d_s"`
+	FPS float64 `json:"f_s"`
+
+	RKBps float64 `json:"rkB_s"`
+	WKBps float64 `json:"wkB_s"`
+
+	// average, includes queue time
+	RAwaitMs float64 `json:"r_await"`
+	WAwaitMs float64 `json:"w_await"`
+
+	Util  float64 `json:"util"`   // 0..1, share of time with something in flight
+	AquSz float64 `json:"aqu_sz"` // avg requests in flight
 }
 
 // diskstats sectors are always 512 bytes no matter what the device uses
@@ -148,7 +159,8 @@ func delta(a, b uint64) uint64 {
 }
 
 // Filter drops devices iolens doesnt care about by default: ram disks,
-// loop devices that never did any io, and partitions (we report whole disks).
+// devices that never did any io (unused loop/nbd), and partitions since
+// we report whole disks.
 // isPartition is injected so tests dont need sysfs
 func Filter(in []Stat, isPartition func(name string) bool) []Stat {
 	out := in[:0:0]
@@ -156,7 +168,7 @@ func Filter(in []Stat, isPartition func(name string) bool) []Stat {
 		if strings.HasPrefix(s.Name, "ram") || strings.HasPrefix(s.Name, "zram") {
 			continue
 		}
-		if strings.HasPrefix(s.Name, "loop") && s.ReadIOs == 0 && s.WriteIOs == 0 {
+		if s.ReadIOs == 0 && s.WriteIOs == 0 && s.DiscardIOs == 0 {
 			continue
 		}
 		if isPartition != nil && isPartition(s.Name) {
