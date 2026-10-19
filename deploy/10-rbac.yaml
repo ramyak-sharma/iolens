@@ -1,0 +1,28 @@
+# agent only needs to read pods on its own node. nothing else
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: iolens
+  namespace: iolens-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: iolens
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: iolens
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: iolens
+subjects:
+  - kind: ServiceAccount
+    name: iolens
+    namespace: iolens-system

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: iolens
+  namespace: iolens-system
+  labels:
+    app: iolens
+spec:
+  selector:
+    matchLabels:
+      app: iolens
+  template:
+    metadata:
+      labels:
+        app: iolens
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9187"
+    spec:
+      serviceAccountName: iolens
+      # run on control plane nodes too
+      tolerations:
+        - operator: Exists
+      containers:
+        - name: iolens
+          image: iolens:dev
+          imagePullPolicy: IfNotPresent
+          args: ["serve", "--listen=:9187"]
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          ports:
+            - name: metrics
+              containerPort: 9187
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            # the minimum outside kind is:
+            #   runAsUser: 0
+            #   capabilities: {add: [BPF, PERFMON, SYS_RESOURCE], drop: [ALL]}
+            # kinds nested containers make capability only setups fiddly
+            # (see README, "privileges"), so the demo just uses privileged
+            privileged: true
+            runAsUser: 0
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: cgroup
+              mountPath: /sys/fs/cgroup
+              readOnly: true
+            - name: btf
+              mountPath: /sys/kernel/btf
+              readOnly: true
+      # /proc/diskstats and /proc/pressure arent namespaced, the containers
+      # own /proc already shows host values so no mount for those
+      volumes:
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
+        - name: btf
+          hostPath:
+            path: /sys/kernel/btf
