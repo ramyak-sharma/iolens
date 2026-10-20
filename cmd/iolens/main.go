@@ -35,6 +35,7 @@ type options struct {
 	cgroupRoot string
 	duration   time.Duration
 	logFile    string
+	align      bool
 }
 
 func usage() {
@@ -68,6 +69,7 @@ func main() {
 	fs.StringVar(&o.config, "config", "", "yaml file with rule thresholds")
 	fs.StringVar(&o.cgroupRoot, "cgroup-root", "/sys/fs/cgroup", "cgroup v2 mount")
 	fs.DurationVar(&o.duration, "duration", 10*time.Second, "how long `once` collects")
+	fs.BoolVar(&o.align, "align", false, "once: tick on whole seconds so windows line up with iostat")
 	fs.StringVar(&o.logFile, "log-file", "", "log here instead of stderr (top discards logs otherwise)")
 	flag.CommandLine = fs
 	fs.Usage = usage

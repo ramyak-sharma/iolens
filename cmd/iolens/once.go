@@ -68,6 +68,12 @@ func runOnce(ctx context.Context, o options) error {
 	}
 	defer cleanup()
 
+	if o.align {
+		// iostat samples on its own start time, the v2 script starts it on a
+		// whole second, so we do the same and both see the same windows
+		now := time.Now()
+		time.Sleep(now.Truncate(time.Second).Add(time.Second).Sub(now))
+	}
 	out := onceOut{Start: time.Now()}
 	if _, err := c.Collect(); err != nil { // baseline sample
 		return err
