@@ -1,0 +1,34 @@
+# quiet "database": random 4k reads, rate limited to 200 iops. the file is
+# written by demo_up.sh first so reads actually hit the disk
+apiVersion: v1
+kind: Pod
+metadata:
+  name: db
+  namespace: default
+  labels:
+    app: db
+spec:
+  containers:
+    - name: fio
+      image: iolens-fio:dev
+      imagePullPolicy: IfNotPresent
+      command:
+        - fio
+        - --name=db
+        - --filename=/data/db/file
+        - --size=1G
+        - --rw=randread
+        - --bs=4k
+        - --iodepth=4
+        - --ioengine=libaio
+        - --direct=1
+        - --rate_iops=200
+        - --time_based
+        - --runtime=3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      hostPath:
+        path: /mnt/data

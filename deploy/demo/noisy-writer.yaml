@@ -1,0 +1,34 @@
+# the neighbour: 1M sequential buffered writes at full speed, fsync every
+# 64 writes (64MB). buffered on purpose, writeback is done by kernel threads
+# and iolens still has to blame this pod and not them
+apiVersion: v1
+kind: Pod
+metadata:
+  name: noisy-writer
+  namespace: default
+  labels:
+    app: noisy-writer
+spec:
+  terminationGracePeriodSeconds: 0
+  containers:
+    - name: fio
+      image: iolens-fio:dev
+      imagePullPolicy: IfNotPresent
+      command:
+        - fio
+        - --name=noisy
+        - --filename=/data/noisy/file
+        - --size=3G
+        - --rw=write
+        - --bs=1M
+        - --ioengine=psync
+        - --fsync=64
+        - --time_based
+        - --runtime=3600
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      hostPath:
+        path: /mnt/data
