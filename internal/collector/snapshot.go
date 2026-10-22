@@ -1,4 +1,4 @@
-// Package collector ticks once per interval, reads everything (bpf maps,
+// package collector ticks once per interval, reads everything (bpf maps,
 // diskstats, psi, io.stat) and publishes one immutable Snapshot. readers
 // (prometheus, tui, rules) only ever look at the latest snapshot and never
 // touch the kernel themselves.

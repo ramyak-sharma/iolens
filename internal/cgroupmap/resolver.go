@@ -1,4 +1,4 @@
-// Package cgroupmap turns cgroup v2 ids from the kernel back into paths and
+// package cgroupmap turns cgroup v2 ids from the kernel back into paths and
 // pods, and reads the per cgroup io.stat and io.pressure files.
 package cgroupmap
 

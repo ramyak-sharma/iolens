@@ -1,4 +1,4 @@
-// Package hist is the user space side of the kernel histograms. the bucket
+// package hist is the user space side of the kernel histograms. the bucket
 // function here must match bucket_index() in bpf/iolens.bpf.c exactly,
 // the table test keeps them honest.
 //
@@ -177,7 +177,7 @@ func quantile(slots *[NumSlots]uint64, n uint64, q float64) float64 {
 	return math.NaN()
 }
 
-// Mean helpers, in microseconds. zero when the window is empty
+// mean helpers, in microseconds. zero when the window is empty
 func (h *Hist) MeanQueueUs() float64  { return mean(h.QueueNs, h.Count) }
 func (h *Hist) MeanDeviceUs() float64 { return mean(h.DeviceNs, h.Count) }
 func (h *Hist) MeanTotalUs() float64  { return mean(h.TotalNs, h.Count) }

@@ -1,4 +1,4 @@
-// Package rules turns snapshots into findings a human can act on. rules are
+// package rules turns snapshots into findings a human can act on. rules are
 // simple on purpose: every finding carries the numbers that made it fire so
 // whoever reads it can check instead of trusting it.
 package rules

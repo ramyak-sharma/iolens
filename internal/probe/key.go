@@ -1,4 +1,4 @@
-// Package probe loads the bpf program, attaches it and reads the
+// package probe loads the bpf program, attaches it and reads the
 // histograms back out.
 package probe
 

@@ -1,4 +1,4 @@
-// Package diskstats reads /proc/diskstats and turns two samples into
+// package diskstats reads /proc/diskstats and turns two samples into
 // iostat -x style rates.
 package diskstats
 

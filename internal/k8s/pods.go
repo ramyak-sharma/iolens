@@ -1,4 +1,4 @@
-// Package k8s keeps an in memory view of the pods on this node so cgroup
+// package k8s keeps an in memory view of the pods on this node so cgroup
 // paths (which only carry the pod uid) can be shown as namespace/name.
 package k8s
 

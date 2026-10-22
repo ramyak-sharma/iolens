@@ -1,4 +1,4 @@
-// Package bpfsrc holds the compiled bpf object and the go types bpf2go
+// package bpfsrc holds the compiled bpf object and the go types bpf2go
 // generates for its maps. regenerate with make generate after touching
 // anything under bpf/
 package bpfsrc

@@ -1,4 +1,4 @@
-// Package tui is the `iolens top` view. plain ansi redraw every interval,
+// package tui is the `iolens top` view. plain ansi redraw every interval,
 // no curses library, it only needs to work in a normal terminal
 package tui
 

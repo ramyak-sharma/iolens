@@ -1,4 +1,4 @@
-// Package psi parses pressure stall information files, the node wide
+// package psi parses pressure stall information files, the node wide
 // /proc/pressure/io and the per cgroup io.pressure. both use same format:
 //
 //	some avg10=0.00 avg60=0.00 avg300=0.00 total=0

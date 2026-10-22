@@ -1,4 +1,4 @@
-// Package export serves the latest snapshot as prometheus metrics. kernel
+// package export serves the latest snapshot as prometheus metrics. kernel
 // counters are cumulative already, which is what prometheus wants, so
 // nothing here resets anything.
 package export
