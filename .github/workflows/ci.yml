@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: vet
+        run: go vet ./...
+      - name: staticcheck
+        uses: dominikh/staticcheck-action@v1
+        with:
+          install-go: false
+      - name: unit tests
+        run: go test -race ./...
+      # plain build with the committed bpf2go output, no clang needed
+      - name: build
+        run: CGO_ENABLED=0 go build -o bin/iolens ./cmd/iolens
+
+  bpf:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: install clang + libbpf
+        run: sudo apt-get update && sudo apt-get install -y clang llvm libbpf-dev
+      - name: bpf2go compile
+        run: go generate ./internal/bpfsrc/
+      # go side of the generated code must match whats committed. the .o can
+      # differ between clang versions so only the types are checked
+      - name: generated go is up to date
+        run: git diff --exit-code -- internal/bpfsrc/iolens_bpfel.go
+
+  image:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+      - name: build image (amd64 + arm64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: false
